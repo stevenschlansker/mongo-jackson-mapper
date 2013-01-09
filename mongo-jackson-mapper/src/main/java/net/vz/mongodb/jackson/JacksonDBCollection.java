@@ -15,7 +15,6 @@
  */
 package net.vz.mongodb.jackson;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -578,7 +577,7 @@ public class JacksonDBCollection<T, K> {
     public T findAndModify(DBObject query, DBObject fields, DBObject sort, boolean remove, DBObject update, boolean returnNew, boolean upsert) {
         return convertFromDbObject(dbCollection.findAndModify(serializeFields(query), fields, sort, remove, update, returnNew, upsert));
     }
-    
+
     /**
      * Finds the first document in the query and updates it.
      *
@@ -592,7 +591,7 @@ public class JacksonDBCollection<T, K> {
      * @return the object
      */
     public T findAndModify(DBObject query, DBObject fields, DBObject sort, boolean remove, DBUpdate.Builder update, boolean returnNew, boolean upsert) {
-        return convertFromDbObject(dbCollection.findAndModify(serializeFields(query), fields, sort, remove, update.serialiseAndGet(objectMapper), returnNew, upsert));
+        return convertFromDbObject(dbCollection.findAndModify(serializeFields(query), fields, sort, remove, update.serialiseAndGet(objectMapper, type), returnNew, upsert));
     }
 
 
@@ -608,7 +607,7 @@ public class JacksonDBCollection<T, K> {
     public T findAndModify(DBObject query, DBObject sort, DBObject update) {
         return findAndModify(query, null, sort, false, update, false, false);
     }
-    
+
     /**
      * calls {@link DBCollection#findAndModify(com.mongodb.DBObject, com.mongodb.DBObject, com.mongodb.DBObject, boolean, com.mongodb.DBObject, boolean, boolean)}
      * with fields=null, remove=false, returnNew=false, upsert=false
@@ -633,11 +632,11 @@ public class JacksonDBCollection<T, K> {
     public T findAndModify(DBObject query, DBObject update) {
         return findAndModify(query, null, null, false, update, false, false);
     }
-    
+
     /**
      * calls {@link DBCollection#findAndModify(com.mongodb.DBObject, com.mongodb.DBObject, com.mongodb.DBObject, boolean, com.mongodb.DBObject, boolean, boolean)}
      * with fields=null, sort=null, remove=false, returnNew=false, upsert=false
-     * 
+     *
      * @param query
      * @param update
      * @return
